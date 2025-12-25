@@ -7,6 +7,7 @@ import (
 
 	"github.com/chahar4/aura/adapter/handlers"
 	"github.com/chahar4/aura/adapter/storages"
+	"github.com/chahar4/aura/core/domains"
 	"github.com/chahar4/aura/core/services"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -22,6 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	db.AutoMigrate(&domains.User{}, &domains.Role{}, &domains.Guild{}, &domains.GroupChannel{}, &domains.Channel{}, &domains.Message{})
 
 	userRepository := storages.NewUserPostgresRepo(db)
 	userService := services.NewUserService(userRepository)
@@ -30,7 +32,11 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Post("/regiter", userHandler.Register)
+	//auth
+	r.Post("/register", userHandler.Register)
+	r.Post("/login", userHandler.Login)
+	r.Post("/forgotpassword", userHandler.ForgotPasswordSend)
+	r.Post("/recovery", userHandler.ForgotPasswordRecovery)
 
 	fmt.Print("server is up on port 3000")
 	if err := http.ListenAndServe(":3000", r); err != nil {

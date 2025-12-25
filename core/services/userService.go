@@ -78,20 +78,24 @@ func (s *UserService) ForgotPasswordSendCode(ctx context.Context, email string) 
 		return err
 	}
 	var code string
-	if user.ExpireForgotToken.After(time.Now()) {
-		code = *user.ForgotToken
+	skip := true
 
-	} else {
+	if user.ExpireForgotToken != nil {
+		if user.ExpireForgotToken.After(time.Now()) {
+			code = *user.ForgotToken
+			skip = false
+		}
+	}
+	if skip {
 		b := make([]byte, 8)
 		rand.Read(b)
 		code = fmt.Sprintf("%x", b)
-
-		if err := s.repo.ChangeForgotCodeUser(ctx, user.ID, code, time.Now().Add(time.Hour*1)); err != nil {
-			return err
-		}
+	}
+	if err := s.repo.ChangeForgotCodeUser(ctx, user.ID, code, time.Now().Add(time.Hour*1)); err != nil {
+		return err
 	}
 
-	body := fmt.Sprintf("<h3>recovery code: %s</h3>", code)
+	body := fmt.Sprintf("recovery code: %s", code)
 	if err := tools.NotificationSender(user.Email, "Recover Password From Aura", body); err != nil {
 		return err
 	}

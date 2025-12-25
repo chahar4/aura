@@ -7,17 +7,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// user model
 type User struct {
 	gorm.Model
 	Username          string
 	PasswordHash      string
 	Email             string
 	Status            string
+	Profile           *string
 	OnlineStatus      OnlineStatus
 	Role              Role
 	ForgotToken       *string
 	ExpireForgotToken *time.Time
+	Messages          []*Message
 }
 
 type OnlineStatus int
