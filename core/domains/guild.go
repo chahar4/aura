@@ -16,6 +16,6 @@ type Guild struct {
 }
 
 type GuildRepository interface {
-	AddGuild(ctx context.Context, guild Guild) error
+	AddGuild(ctx context.Context, guild Guild, userID uint) error 
 	DeleteGulid(ctx context.Context, id uint) error
 }

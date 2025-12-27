@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/chahar4/aura/adapter/handlers"
+	customMiddleware "github.com/chahar4/aura/adapter/middleware"
 	"github.com/chahar4/aura/adapter/storages"
 	"github.com/chahar4/aura/core/domains"
 	"github.com/chahar4/aura/core/services"
@@ -31,6 +32,9 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+
+	authRoute := chi.NewRouter()
+	authRoute.Use(customMiddleware.JwtMiddleware)
 
 	//auth
 	r.Post("/register", userHandler.Register)

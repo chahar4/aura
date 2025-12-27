@@ -15,16 +15,21 @@ import (
 )
 
 type UserService struct {
-	repo domains.UserRepository
+	repo    domains.UserRepository
+	timeout time.Duration
 }
 
 func NewUserService(userRepository domains.UserRepository) *UserService {
 	return &UserService{
-		repo: userRepository,
+		repo:    userRepository,
+		timeout: time.Duration(2) * time.Second,
 	}
 }
 
 func (s *UserService) Register(ctx context.Context, username, password, email string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return tools.PasswordHashErr
@@ -51,6 +56,9 @@ type CustomeClaim struct {
 }
 
 func (s *UserService) Login(ctx context.Context, email, password string) (string, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
 	user, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
 		return "", tools.LoginErr
@@ -72,6 +80,8 @@ func (s *UserService) Login(ctx context.Context, email, password string) (string
 }
 
 func (s *UserService) ForgotPasswordSendCode(ctx context.Context, email string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
 
 	user, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
@@ -104,6 +114,9 @@ func (s *UserService) ForgotPasswordSendCode(ctx context.Context, email string) 
 }
 
 func (s *UserService) ForgotPasswordRecovery(ctx context.Context, email, newPassword, token string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
 	user, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
 		return err

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/chahar4/aura/core/services"
 )
@@ -30,8 +31,14 @@ func (h *GuildHandler) AddGuild(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Request invalid", http.StatusBadRequest)
 		return
 	}
+	userIDString := r.Context().Value("userID").(string)
+	userID ,err := strconv.Atoi(userIDString)
+	if err != nil{
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
-	if err := h.guildService.AddGuild(context.Background(), request.Name, request.Profile); err != nil {
+	if err := h.guildService.AddGuild(context.Background(),uint(userID), request.Name, request.Profile); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

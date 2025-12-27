@@ -1,6 +1,9 @@
 package domains
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type GuildMember struct {
 	GuildID uint `gorm:"primaryKey;autoIncrement:false"`
@@ -13,4 +16,8 @@ type GuildMember struct {
 
 	User  User  `gorm:"foreignKey:UserID"`
 	Guild Guild `gorm:"foreignKey:GuildID"`
+}
+
+type GuildMemberRepository interface {
+	AddGuildMember(ctx context.Context, guildMember GuildMember) error
 }
