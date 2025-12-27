@@ -15,10 +15,10 @@ type User struct {
 	Status            string
 	Profile           *string
 	OnlineStatus      OnlineStatus
-	Role              Role
 	ForgotToken       *string
 	ExpireForgotToken *time.Time
-	Messages          []*Message
+	Messages          []Message
+	Memberships       []GuildMember `gorm:"foreignKey:UserID"`
 }
 
 type OnlineStatus int

@@ -1,11 +1,21 @@
 package domains
 
-import "gorm.io/gorm"
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
 
 type Guild struct {
 	gorm.Model
 	Name          string
 	Profile       *string
-	Users         []*User `gorm:"many2many:guild_user;"`
-	GroupChannels []*GroupChannel
+	Members       []GuildMember `gorm:"foreignKey:GuildID;"`
+	GroupChannels []GroupChannel
+	Role          []Role `gorm:"foreignKey:GuildID;"`
+}
+
+type GuildRepository interface {
+	AddGuild(ctx context.Context, guild Guild) error
+	DeleteGulid(ctx context.Context, id uint) error
 }

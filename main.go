@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	db.AutoMigrate(&domains.User{}, &domains.Role{}, &domains.Guild{}, &domains.GroupChannel{}, &domains.Channel{}, &domains.Message{})
+	db.AutoMigrate(&domains.User{}, &domains.Role{}, &domains.Guild{}, &domains.GuildMember{}, &domains.GroupChannel{}, &domains.Channel{}, &domains.Message{})
 
 	userRepository := storages.NewUserPostgresRepo(db)
 	userService := services.NewUserService(userRepository)

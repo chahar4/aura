@@ -1,26 +1,18 @@
 package domains
 
+import (
+	"context"
 
-import "gorm.io/gorm"
+	"gorm.io/gorm"
+)
 
-
-//role model
+// role model
 type Role struct {
 	gorm.Model
-	UserID uint
-	Name   string
+	GuildID uint
+	Name    string
 }
 
-type RoleRepository interface{
-	AddRole(role Role) error
-}
-
-type RoleService struct {
-	repo RoleRepository
-}
-
-func NewRoleService(roleRepository RoleRepository) *RoleService{
-	return &RoleService{
-		repo: roleRepository,
-	}
+type RoleRepository interface {
+	AddRole(ctx context.Context, role Role) error
 }
