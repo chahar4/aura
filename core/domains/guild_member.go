@@ -19,5 +19,5 @@ type GuildMember struct {
 }
 
 type GuildMemberRepository interface {
-	AddGuildMember(ctx context.Context, guildMember GuildMember) error
+	GetAllMemberByGuildID(ctx context.Context, guildID uint) ([]*User, error)
 }

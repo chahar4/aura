@@ -13,7 +13,7 @@ type GuildPostgresRepo struct {
 	db *gorm.DB
 }
 
-func NewGuildPostgreRepo(db *gorm.DB) *GuildPostgresRepo {
+func NewGuildPostgresRepo(db *gorm.DB) *GuildPostgresRepo {
 	return &GuildPostgresRepo{
 		db: db,
 	}

@@ -26,9 +26,21 @@ func main() {
 	}
 	db.AutoMigrate(&domains.User{}, &domains.Role{}, &domains.Guild{}, &domains.GuildMember{}, &domains.GroupChannel{}, &domains.Channel{}, &domains.Message{})
 
+	//inject user
 	userRepository := storages.NewUserPostgresRepo(db)
 	userService := services.NewUserService(userRepository)
 	userHandler := handlers.NewUserHandler(userService)
+
+	//inject guild member 
+	guildMemberRepository := storages.NewGuildMemberPostgresRepo(db)
+	guildMemberService := services.NewGuildMemberService(guildMemberRepository)
+	guildMemberHandler := handlers.NewGuildMemberHandler(guildMemberService)
+
+
+	//inject guild
+	guildRepository := storages.NewGuildPostgresRepo(db)
+	guildService := services.NewGuildService(guildRepository ,guildMemberRepository)
+	guildHandler := handlers.NewGuildHandler(guildService)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -36,11 +48,16 @@ func main() {
 	authRoute := chi.NewRouter()
 	authRoute.Use(customMiddleware.JwtMiddleware)
 
+	authRoute.Post("/guilds" , guildHandler.AddGuild)
+	authRoute.Get("/users/me/guilds" , guildMemberHandler.GetAllGuildsByUserID)
+
 	//auth
 	r.Post("/register", userHandler.Register)
 	r.Post("/login", userHandler.Login)
 	r.Post("/forgotpassword", userHandler.ForgotPasswordSend)
 	r.Post("/recovery", userHandler.ForgotPasswordRecovery)
+
+	r.Mount("/" , authRoute)
 
 	fmt.Print("server is up on port 3000")
 	if err := http.ListenAndServe(":3000", r); err != nil {
