@@ -14,7 +14,7 @@ type UserPostgresRepo struct {
 	db *gorm.DB
 }
 
-func NewUserPostgresRepo(db *gorm.DB) *UserPostgresRepo{
+func NewUserPostgresRepo(db *gorm.DB) *UserPostgresRepo {
 	return &UserPostgresRepo{
 		db: db,
 	}
@@ -50,8 +50,19 @@ func (p *UserPostgresRepo) ChangePasswordUser(ctx context.Context, id uint, pass
 	return nil
 }
 
+func (p *UserPostgresRepo) GetUserByID(ctx context.Context, ID uint) (*domains.User, error) {
+	user, err := gorm.G[domains.User](p.db).Where("id = ?", ID).First(ctx)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, tools.NotFoundErrDb
+	}
+	if err != nil {
+		return nil, tools.ProblemErrDb
+	}
+	return &user, nil
+}
+
 func (p *UserPostgresRepo) GetUserByEmail(ctx context.Context, email string) (*domains.User, error) {
-	user, err := gorm.G[domains.User](p.db).Where("email = ?", email).First(ctx)
+	user, err := gorm.G[domains.User](p.db).Preload("guild_member", nil).Where("email = ?", email).First(ctx)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, tools.NotFoundErrDb
 	}

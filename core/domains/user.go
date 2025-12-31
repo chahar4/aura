@@ -35,4 +35,5 @@ type UserRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (*User, error)
 	ChangeForgotCodeUser(ctx context.Context, id uint, code string, expireAt time.Time) error
 	ChangePasswordUser(ctx context.Context, id uint, password string) error
+	GetUserByID(ctx context.Context, ID uint) (*User, error)
 }

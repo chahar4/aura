@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 type GuildPostgresRepo struct {
 	db *gorm.DB
 }

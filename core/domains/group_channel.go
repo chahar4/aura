@@ -14,6 +14,7 @@ type GroupChannel struct {
 }
 
 type GroupChannelRepository interface {
-	AddGroupChannel(ctx context.Context, groupChannel GroupChannel) error
-	DeleteGroupChannel(ctx context.Context, id uint) error
+	//AddGroupChannel(ctx context.Context, groupChannel GroupChannel) error
+	//DeleteGroupChannel(ctx context.Context, id uint) error
+	GetGuildIDByChannelID(ctx context.Context, channelID uint) (uint, error)
 }

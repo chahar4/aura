@@ -23,22 +23,13 @@ func (s *GuildMemberService) GetAllMemberByGuildID(ctx context.Context, guildID 
 	ctx, cansel := context.WithTimeout(ctx, s.timeout)
 	defer cansel()
 
-	users, err := s.GetAllMemberByGuildID(ctx, guildID)
-	if err != nil {
-		return nil, err
-	}
+	return s.GetAllMemberByGuildID(ctx, guildID)
 
-	return users, nil
 }
 
 func (s *GuildMemberService) GetAllGuildsByUserID(ctx context.Context, userID uint) ([]*domains.Guild, error) {
 	ctx, cansel := context.WithTimeout(ctx, s.timeout)
 	defer cansel()
 
-	guilds, err := s.GetAllGuildsByUserID(ctx, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	return guilds, nil
+	return s.GetAllGuildsByUserID(ctx, userID)
 }
