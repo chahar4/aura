@@ -17,10 +17,10 @@ type MessageService struct {
 
 func NewMessageService(messageRepository domains.MessageRepository, userRepository domains.UserRepository, channelRepository domains.ChannelRepository) *MessageService {
 	return &MessageService{
-		messageRepository:      messageRepository,
-		userRepository:         userRepository,
+		messageRepository: messageRepository,
+		userRepository:    userRepository,
 		channelRepository: channelRepository,
-		timeout:                time.Duration(2) * time.Second,
+		timeout:           time.Duration(2) * time.Second,
 	}
 }
 
@@ -28,9 +28,8 @@ func (s *MessageService) SaveMessage(ctx context.Context, channelID, userID uint
 	ctx, cansel := context.WithTimeout(ctx, s.timeout)
 	defer cansel()
 
-	if ok := s.channelRepository.IsUserInChannel(ctx, channelID,userID); !ok{
+	if ok := s.channelRepository.IsUserInChannel(ctx, channelID, userID); !ok {
 		return tools.ProblemErrDb
 	}
-
-
+	return nil
 }

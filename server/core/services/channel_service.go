@@ -37,3 +37,9 @@ func (s *ChannelService) GetAllChannelsByGroupChannelID(ctx context.Context, gro
 
 	return s.channelRepo.GetAllChannelByGroupChannelID(ctx, groupChannelID)
 }
+
+//func (s *ChannelService) IsUserInChannel(ctx context.Context, channelID, userID uint) bool {
+//	ctx, cansel := context.WithTimeout(ctx, s.timeout)
+//	defer cansel()
+//	return s.channelRepo.IsUserInChannel(ctx, channelID, userID)
+//}

@@ -35,7 +35,7 @@ func (p *ChannelPostgresRepo) GetAllChannelByGroupChannelID(ctx context.Context,
 	return channels, nil
 }
 
-func (p *GroupChannelPostgresRepo) IsUserInChannel(ctx context.Context, channelID, userID uint) bool {
+func (p *ChannelPostgresRepo) IsUserInChannel(ctx context.Context, channelID, userID uint) bool {
 
 	channel, err := gorm.G[domains.Channel](p.db).Where("id = ?", channelID).First(ctx)
 	if err != nil {
